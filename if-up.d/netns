@@ -1,0 +1,17 @@
+#!/bin/sh
+
+set -e
+
+if [ -n "${IF_PEER_NETNS}" -a -n "${IF_PEER_IFACE}" ]
+then
+	# Bring up the remote end of the veth
+	ip netns exec ${IF_PEER_NETNS} ip link set ${IF_PEER_IFACE} up
+
+	case "${IF_CONFIGURE_INTERFACES}" in
+		true|yes|on)
+			# Ifup the interfaces in the netns
+			ip netns exec ${IF_PEER_NETNS} ifup -i /etc/network/interfaces.${IF_PEER_NETNS} -a
+			;;
+	esac
+fi
+

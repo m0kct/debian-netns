@@ -1,0 +1,17 @@
+#!/bin/sh
+
+set -e
+
+if [ -n "${IF_PEER_NETNS}" -a -n "${IF_PEER_IFACE}" ]
+then
+	# Take down the remote end of the veth
+	ip netns exec ${IF_PEER_NETNS} ip link set ${IF_PEER_IFACE} down
+
+	case "${IF_CONFIGURE_INTERFACES}" in
+		true|yes|on)
+			# Ifdown the interfaces inside the netns
+			ip netns exec ${IF_PEER_NETNS} ifdown -i /etc/network/interfaces.${IF_PEER_NETNS} -a
+			;;
+	esac
+fi
+
