@@ -45,10 +45,6 @@ this means that when `ifup` runs, it won't see the `/etc/network/if-*.d`
 scripts (at least if they're not mirrored in `/etc/netns/myns`).
 
 It would be nice to have some better way to run `ifup` inside a namespace,
-but this would require hacking `ifupdown`.  To run it manually, you need to
-say:
-
-```
-ip netns exec myns ifup -i /etc/network/interfaces.myns -a
-```
+but this would require hacking `ifupdown`.  If you want to know how to run it
+by hand, look in `if-up.d/netns`.  It's not as simple as you might think.
 
