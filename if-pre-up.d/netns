@@ -7,6 +7,8 @@ then
 	# Create netns if it doesn't already exist, and bring up the loopback
 	if ! (ip netns list | grep -qx ${IF_PEER_NETNS})
 	then
+		mkdir -p /run/network.${IF_PEER_NETNS}
+		rm -rf /run/network.${IF_PEER_NETNS}/*
 		ip netns add ${IF_PEER_NETNS}
 		ip netns exec ${IF_PEER_NETNS} ip link set lo up
 	fi

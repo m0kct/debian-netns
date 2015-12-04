@@ -9,8 +9,14 @@ then
 
 	case "${IF_CONFIGURE_INTERFACES}" in
 		true|yes|on)
-			# Ifdown the interfaces inside the netns
-			ip netns exec ${IF_PEER_NETNS} ifdown -i /etc/network/interfaces.${IF_PEER_NETNS} -a
+			# Ifdown the interfaces inside the netns and inside
+			# a mount namespace with /run/network.nsname mounted
+			# on /run/network
+			unshare -m /bin/sh <<-EOF
+				mount --make-rprivate /
+				mount --bind /run/network.${IF_PEER_NETNS} /run/network
+				ip netns exec ${IF_PEER_NETNS} ifdown -i /etc/network/interfaces.${IF_PEER_NETNS} -a
+			EOF
 			;;
 	esac
 fi
